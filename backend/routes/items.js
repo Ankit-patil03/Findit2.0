@@ -1,8 +1,8 @@
 const express = require('express');
-const fs = require('fs');
 const pool = require('../db');
 const auth = require('../middleware/auth');
 const uploadImage = require('../middleware/upload');
+const { removeImage } = uploadImage;
 const { findMatchesForItem } = require('../services/matching');
 
 const router = express.Router();
@@ -58,8 +58,8 @@ router.post('/', auth, uploadImage, async (req, res) => {
   else if (date_occurred > todayOnCampus()) errors.push('date cannot be in the future');
 
   if (errors.length) {
-    // Don't leave an orphaned image on disk if the report itself was rejected
-    if (req.file) fs.unlink(req.file.path, () => {});
+    // Don't leave an orphaned image (on disk or in S3) if the report itself was rejected
+    removeImage(req.file);
     return res.status(400).json({ errors });
   }
 
@@ -88,7 +88,7 @@ router.post('/', auth, uploadImage, async (req, res) => {
     res.status(201).json({ ...item, matches_found: matches.length });
   } catch (err) {
     console.error('Create item error:', err);
-    if (req.file) fs.unlink(req.file.path, () => {});
+    removeImage(req.file);
     res.status(500).json({ error: 'Could not save the report' });
   }
 });
