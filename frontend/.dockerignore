@@ -1,0 +1,14 @@
+# Windows build of the packages; the image installs its own Linux ones
+node_modules
+
+# Old build output; the image builds a fresh one
+dist
+
+# Your laptop's VITE_API_URL must not end up in the image
+.env
+.env.*
+
+# Not needed inside the image
+npm-debug.log
+Dockerfile
+.dockerignore

@@ -1,7 +1,8 @@
 // One place for every call to the backend.
 // It adds the login token, sends JSON or form-data, and turns error replies into normal JS errors.
 
-const API_URL = import.meta.env.VITE_API_URL;
+// Empty in Docker: the API is on the same address as the page, and nginx forwards /api to the backend
+const API_URL = import.meta.env.VITE_API_URL ?? '';
 const TOKEN_KEY = 'findit_token';
 const USER_KEY = 'findit_user';
 

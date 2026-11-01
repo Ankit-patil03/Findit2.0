@@ -1,0 +1,50 @@
+# Local test only: the whole app in Docker (frontend + backend + database).
+# On EC2 we use docker-compose.prod.yml with RDS and S3 instead.
+#
+#   docker compose up --build -d    start everything, open http://localhost:8080
+#   docker compose down             stop (data and photos are kept)
+#   docker compose down -v          stop and wipe the test database and photos
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: findit
+      POSTGRES_PASSWORD: findit_local # throwaway local password, not a real secret
+      POSTGRES_DB: findit
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql (not .../data)
+      - db-data:/var/lib/postgresql
+      # On the very first start, Postgres runs these files to create the tables
+      - ./backend/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./backend/db/migrations/001_add_proof_details.sql:/docker-entrypoint-initdb.d/02-proof-details.sql:ro
+    healthcheck: # "healthy" only once it accepts connections
+      test: ["CMD-SHELL", "pg_isready -U findit -d findit"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: db # the service name works as a hostname inside Docker
+      DB_USER: findit
+      DB_PASSWORD: findit_local
+      DB_NAME: findit
+      JWT_SECRET: local-docker-only-secret
+      APP_TIMEZONE: Asia/Kolkata
+    volumes:
+      - photos:/app/uploads # no S3_BUCKET here, so photos are saved to disk
+    depends_on:
+      db:
+        condition: service_healthy # wait until Postgres is really ready
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80" # the only port open to your laptop, like on EC2
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
+  photos:
