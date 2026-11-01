@@ -91,11 +91,11 @@ Options considered:
 
 ## 3. Before you start
 
-- [ ] AWS account, logged in as an **IAM user with admin rights** (not the root account)
-- [ ] Region: **ap-south-1 (Mumbai)** for everything
-- [ ] AWS CLI installed on your laptop, then `aws configure` with that IAM user's keys
-- [ ] Docker Desktop installed (Phase 1)
-- [ ] Node 24 locally (you have `v24.21.0`); the Docker images will use Node 24 too
+- [x] AWS account, logged in as an **IAM user with admin rights** (not the root account)
+- [x] Region: **ap-south-1 (Mumbai)** for everything
+- [x] AWS CLI installed on your laptop, then `aws login` as `admin-03` (temporary credentials, no access keys; run it again when it says expired)
+- [x] Docker Desktop installed (Phase 1)
+- [x] Node 24 locally (you have `v24.21.0`); the Docker images will use Node 24 too
 
 ### Environment variables the app needs
 
@@ -115,28 +115,28 @@ Options considered:
 
 ### Step 1. Commit untracked files and fix `.gitignore`
 Most of the app (`routes/auth.js`, `routes/items.js`, `App.jsx`, the pages, `api.js`) is not committed yet. Docker builds and deployments start from git.
-- [ ] Root `.gitignore` covers: `node_modules/`, `.env`, `**/.env`, `backend/uploads/`, `frontend/dist/`
-- [ ] Review the file list, then commit
-- [ ] Check that no `.env` file was committed: `git ls-files | grep .env` prints nothing
+- [x] Root `.gitignore` covers: `node_modules/`, `.env`, `**/.env`, `backend/uploads/`, `frontend/dist/`
+- [x] Review the file list, then commit
+- [x] Check that no `.env` file was committed: `git ls-files | grep .env` prints nothing
 
 ### Step 2. Make `db.js` work with RDS
-- [ ] Use `DATABASE_URL` when it is set, and keep the current `DB_*` variables for local development
-- [ ] Turn on SSL when connecting to RDS (RDS PostgreSQL requires SSL by default)
-- [ ] Test locally: the app still works against your local database
+- [x] Use `DATABASE_URL` when it is set, and keep the current `DB_*` variables for local development
+- [x] Turn on SSL when connecting to RDS (RDS PostgreSQL requires SSL by default)
+- [x] Test locally: the app still works against your local database
 
 ### Step 3. Store photos in S3 instead of on disk
-- [ ] Add `@aws-sdk/client-s3` to the backend
-- [ ] Change `middleware/upload.js` to send the image to S3 (only this file changes for storage, as its comment says)
-- [ ] Keep photo paths as `/uploads/<file>` in the database. The backend reads `/uploads/*` from S3, so the bucket stays private and the frontend's `imageUrl()` keeps working
-- [ ] Credentials come from the EC2 IAM role in production, so no keys go in the code
+- [x] Add `@aws-sdk/client-s3` to the backend
+- [x] Change `middleware/upload.js` to send the image to S3 (only this file changes for storage, as its comment says)
+- [x] Keep photo paths as `/uploads/<file>` in the database. The backend reads `/uploads/*` from S3, so the bucket stays private and the frontend's `imageUrl()` keeps working
+- [x] Credentials come from the EC2 IAM role in production, so no keys go in the code
 
 ---
 
 ## Phase 1: Docker (laptop)
 
 ### Step 4. Install Docker Desktop
-- [ ] Enable WSL2 (Windows 10 Home needs it): run `wsl --install` in an admin PowerShell, then restart
-- [ ] Install Docker Desktop and check: `docker --version` and `docker compose version`
+- [x] Enable WSL2 (Windows 10 Home needs it): run `wsl --install` in an admin PowerShell, then restart
+- [x] Install Docker Desktop and check: `docker --version` and `docker compose version`
 
 ### Step 5. Backend image
 Files: `backend/Dockerfile`, `backend/.dockerignore`
