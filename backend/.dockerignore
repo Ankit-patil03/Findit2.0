@@ -1,0 +1,15 @@
+# Windows build of the packages; the image installs its own Linux ones
+node_modules
+
+# Secrets are passed in when the container starts, never baked into the image
+.env
+.env.*
+
+# Test photos
+uploads
+
+# Not needed inside the image
+npm-debug.log
+Dockerfile
+.dockerignore
+.gitignore
