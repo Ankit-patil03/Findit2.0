@@ -19,7 +19,7 @@ report/
 *.log
 
 # Personal editor / Claude Code settings
-.claude/settings.local.json
+.claude/
 .vscode/*
 !.vscode/extensions.json
 .DS_Store
