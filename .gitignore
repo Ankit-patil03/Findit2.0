@@ -1,0 +1,26 @@
+# Dependencies (reinstalled with npm ci, never committed)
+node_modules/
+
+# Secrets: real values live only on your laptop and on the server
+.env
+.env.*
+!.env.example
+
+# Photos uploaded by users while testing locally
+backend/uploads/
+
+# Build output (recreated by npm run build)
+frontend/dist/
+
+# College report (has PRN numbers; repo is public)
+report/
+
+# Logs
+*.log
+
+# Personal editor / Claude Code settings
+.claude/settings.local.json
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
