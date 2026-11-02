@@ -7,7 +7,7 @@
 
 services:
   backend:
-    image: 804425018582.dkr.ecr.ap-south-1.amazonaws.com/findit-backend:v1
+    image: 804425018582.dkr.ecr.ap-south-1.amazonaws.com/findit-backend:v2
     env_file: .env
     restart: unless-stopped # comes back after a crash or a server reboot
     logging: &logs # keep logs small so they can't fill the disk
@@ -17,7 +17,7 @@ services:
         max-file: "3"
 
   frontend:
-    image: 804425018582.dkr.ecr.ap-south-1.amazonaws.com/findit-frontend:v1
+    image: 804425018582.dkr.ecr.ap-south-1.amazonaws.com/findit-frontend:v2
     ports:
       - "80:80" # the only port open on the server
     restart: unless-stopped
