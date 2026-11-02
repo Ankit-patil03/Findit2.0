@@ -1,0 +1,26 @@
+# Production (EC2): images from ECR, database on RDS, photos on S3.
+# Settings and secrets come from .env next to this file on the server (never committed).
+#
+#   docker compose -f docker-compose.prod.yml pull     download the images from ECR
+#   docker compose -f docker-compose.prod.yml up -d    start (or update) the app
+#   docker compose -f docker-compose.prod.yml logs -f backend
+
+services:
+  backend:
+    image: 804425018582.dkr.ecr.ap-south-1.amazonaws.com/findit-backend:v1
+    env_file: .env
+    restart: unless-stopped # comes back after a crash or a server reboot
+    logging: &logs # keep logs small so they can't fill the disk
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    image: 804425018582.dkr.ecr.ap-south-1.amazonaws.com/findit-frontend:v1
+    ports:
+      - "80:80" # the only port open on the server
+    restart: unless-stopped
+    depends_on:
+      - backend
+    logging: *logs
