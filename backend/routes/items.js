@@ -56,6 +56,8 @@ router.post('/', auth, uploadImage, async (req, res) => {
   if (!isValidDate(date_occurred)) errors.push('date_occurred must be YYYY-MM-DD');
   // Both are "YYYY-MM-DD" strings, and those compare correctly as plain text
   else if (date_occurred > todayOnCampus()) errors.push('date cannot be in the future');
+  // The owner needs to see what was found, so a found report must come with a photo
+  if (type === 'found' && !req.file) errors.push('a photo is required for found items');
 
   if (errors.length) {
     // Don't leave an orphaned image (on disk or in S3) if the report itself was rejected

@@ -40,6 +40,13 @@ function ReportItem() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+
+    // Same rule as the backend: a found item must have a photo so the owner can recognise it
+    if (type === 'found' && !photo) {
+      setError('Please add a photo of the item you found');
+      return;
+    }
+
     setSubmitting(true);
 
     // FormData instead of JSON, because a photo file can't go inside JSON.
@@ -153,8 +160,11 @@ function ReportItem() {
         </div>
 
         <div>
-          <p className="label">Photo (optional)</p>
+          <p className="label">Photo {isLost ? '(optional)' : '(required)'}</p>
           <CameraCapture file={photo} onChange={setPhoto} />
+          {!isLost && (
+            <p className="mt-1.5 text-xs text-slate-500">A clear photo helps the owner recognise their item.</p>
+          )}
         </div>
 
         <button type="submit" className="btn-primary w-full" disabled={submitting}>
